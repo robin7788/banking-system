@@ -112,4 +112,18 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Two Factor authentication
+    |--------------------------------------------------------------------------
+    |
+    | Here you can define the medium through with Two factor code is sent to user.
+    |
+    | Supported: "mail", "vonage"
+    |
+    */
+    'two_factor' => [
+        'via' => ['mail'],
+    ],
+
 ];

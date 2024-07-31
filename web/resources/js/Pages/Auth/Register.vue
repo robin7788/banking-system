@@ -7,7 +7,14 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
-    name: '',
+    first_name: '',
+    last_name: '',
+    dob: '',
+    address_1: '',
+    address_2: '',
+    town: '',
+    country: '',
+    post_code: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -26,19 +33,33 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="first_name" value="First Name" />
 
                 <TextInput
-                    id="name"
+                    id="first_name"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.name"
+                    v-model="form.first_name"
                     required
                     autofocus
-                    autocomplete="name"
+                    autocomplete="first_name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.first_name" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="last_name" value="Last Name" />
+
+                <TextInput
+                    id="last_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.last_name"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.last_name" />
             </div>
 
             <div class="mt-4">
@@ -54,6 +75,90 @@ const submit = () => {
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="dob" value="Date of Birth" />
+
+                <TextInput
+                    id="dob"
+                    type="date"
+                    class="mt-1 block w-full"
+                    v-model="form.dob"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.dob" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address_1" value="Address 1" />
+
+                <TextInput
+                    id="address_1"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address_1"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.address_1" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="address_2" value="Address 2" />
+
+                <TextInput
+                    id="address_2"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.address_2"
+                />
+
+                <InputError class="mt-2" :message="form.errors.address_2" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="town" value="Town" />
+
+                <TextInput
+                    id="town"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.town"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.town" />
+            </div>
+
+
+            <div class="mt-4">
+                <InputLabel for="country" value="Country" />
+
+                <TextInput
+                    id="country"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.country"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.country" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="post_code" value="Postcode" />
+
+                <TextInput
+                    id="post_code"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.post_code"
+                    required
+                />
+
+                <InputError class="mt-2" :message="form.errors.post_code" />
             </div>
 
             <div class="mt-4">
