@@ -1,1 +1,5 @@
+/.phpunit.cache
+/.fleet
+/.idea
+/.vscode
 /.DS_Store
