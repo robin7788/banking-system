@@ -1,0 +1,33 @@
+name: banking-system
+recipe: laravel
+
+config:
+  php: 8.2
+  webroot: ./web/public
+  xdebug: true
+
+services:
+  node:
+    type: node:20
+    build:
+      - npm install
+  mailhog:
+    type: mailhog
+    portforward: false
+    hogfrom:
+      - appserver
+  appserver:
+    type: 'php:8.2'
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database
+      
+tooling:
+  npm:
+    service: node
+  node:
+    service: node
+  phpcs:
+    service: appserver
+    cmd: /app/vendor/bin/phpcs
