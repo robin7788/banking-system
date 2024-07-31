@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Admin',
+            'first_name' => 'Admin',
             'email' => 'admin@banking-system.lando.site',
             'password' => 'nmG25x8&fgle'
         ]);

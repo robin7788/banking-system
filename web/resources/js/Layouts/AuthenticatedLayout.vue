@@ -5,9 +5,13 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const authUser = usePage().props.auth.user;
+const is_admin = authUser ? authUser.is_admin : false;
+
 </script>
 
 <template>
@@ -31,6 +35,9 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                                <NavLink v-if="is_admin" :href="route('admin.user.index')" :active="route().current('admin.user.*')">
+                                    User
                                 </NavLink>
                             </div>
                         </div>

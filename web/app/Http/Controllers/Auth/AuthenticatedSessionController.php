@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Notifications\SendTwoFactorCodeNotification;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,13 +28,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse|Response
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Added random code generation and send that code to user's email
+        $request->user()->generateTwoFactorCode();
+        $request->user()->notify(new SendTwoFactorCodeNotification());
+
+        return redirect()->intended(route('verify.index'));
     }
 
     /**
