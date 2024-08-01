@@ -24,11 +24,13 @@ const form = useForm({
     town: props.user ? props.user.town : null,
     country: props.user ? props.user.country : null,
     post_code: props.user ? props.user.post_code : null,
+    type: props.user && props.user.account ? props.user.account.type : 'saving',
     password: '',
+    add_new: false
 });
 
-function handleSubmit () {
-    console.log()
+function handleSubmit (add_new = false) {
+    form.add_new = add_new == true;
     if(form.id) {
         form.patch(route('admin.user.update', form.id));
     } else {
@@ -40,7 +42,18 @@ function handleSubmit () {
 
 <template>
     <section>
-        <form @submit.prevent="handleSubmit" class="mt-6 space-y-6">
+        <form class="mt-6 space-y-6">
+            <div>
+                <InputLabel for="type" value="Account Type" />
+
+                <select v-model="form.type" name="type" class="mt-1 block w-full">
+                    <option value="saving">Saving</option>
+                    <option value="current">Current</option>
+                </select>
+
+                <InputError class="mt-2" :message="form.errors.first_name" />
+            </div>
+            
             <div>
                 <InputLabel for="first_name" value="First Name" />
 
@@ -177,7 +190,8 @@ function handleSubmit () {
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton @click="handleSubmit(false)" :disabled="form.processing">Save</PrimaryButton>
+                <PrimaryButton @click="handleSubmit(true)"  :disabled="form.processing">Save and Add New</PrimaryButton>
 
                 <Transition
                     enter-active-class="transition ease-in-out"

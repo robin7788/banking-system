@@ -41,7 +41,7 @@ class UserController extends Controller
             'created_at'
         ];
 
-        $query = User::query()->select($columns);
+        $query = User::query()->with('account')->select($columns);
 
         if($request->get('search')) {
             $query->where('first_name', 'LIKE', '%' . $request->get('search') . '%')
@@ -54,7 +54,7 @@ class UserController extends Controller
                 ->orWhere('created_at', 'LIKE', '%' . $request->get('search') . '%');
         }
         
-        $users = $query->paginate()->appends($request->all());
+        $users = $query->orderBy('updated_at', 'desc')->paginate()->appends($request->all());
         
         return Inertia::render('Admin/User/List', [
             'users' =>UserResource::collection($users),
@@ -112,6 +112,7 @@ class UserController extends Controller
         $userAccount = UserAccount::create([
             'user_id' => $user->id,
             'account_number' => getRandomAccountNumber(),
+            'type' => $request->get('type'),
             'balance' => 0,
             'currency' => config('app.user_currency')
         ]);
@@ -122,7 +123,8 @@ class UserController extends Controller
             auth()->user(), 
         );
 
-        return Redirect::route('admin.user.edit', $user->id);
+        return $request->add_new ? Redirect::route('admin.user.create') 
+            : Redirect::route('admin.user.index');
     }
 
 
@@ -167,6 +169,7 @@ class UserController extends Controller
                 'user_id' => $user->id,
                 'account_number' => getRandomAccountNumber(),
                 'balance' => 0,
+                'type' => 'saving',
                 'currency' => config('app.user_currency')
             ]);
             $success = $transaction->deposit(

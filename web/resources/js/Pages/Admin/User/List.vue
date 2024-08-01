@@ -45,6 +45,7 @@ const props = defineProps({
                     <table class="table-auto">
                         <thead>
                         <th>ID</th>
+                        <th>Account Type</th>
                         <th>Name</th>
                         <th>DOB</th>
                         <th>Address</th>
@@ -53,7 +54,8 @@ const props = defineProps({
                         </thead>
                         <tbody>
                         <tr v-for="user in users.data" :key="user.id">
-                            <td>{{ user.id }}</td>
+                            <td>{{ user.account_number }}</td>
+                            <td>{{ user.type.toUpperCase() }}</td>
                             <td>{{ user.first_name }} {{ user.last_name }}</td>
                             <td>{{ user.dob }}</td>
                             <td>{{ user.post_code }}</td>

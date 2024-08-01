@@ -62,3 +62,4 @@
 ## Helper documents
 - [System Architecture](Documentation/Installation/System Architecture.jpg)
 - [Login Flowchart](Documentation/Installation/Login Flow Chart.jpg)
+- [DB Schema](Documentation/Installation/DB Schema.png)

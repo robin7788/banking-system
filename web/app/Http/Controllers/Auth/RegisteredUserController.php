@@ -60,19 +60,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        $userAccount = UserAccount::create([
-            'user_id' => $user->id,
-            'account_number' => getRandomAccountNumber(),
-            'balance' => 0,
-            'currency' => config('app.user_currency')
-        ]);
-        
-        $transaction->deposit(
-            $userAccount, 
-            config('app.user_account_balance'), 
-            User::find(1), 
-        );
-
         event(new Registered($user));
 
         try {

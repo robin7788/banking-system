@@ -27,6 +27,7 @@ class UserCreateRequest extends FormRequest
             'town' => 'required|string|max:150',
             'country' => 'required|string|max:150',
             'post_code' => 'required|string|max:20',
+            'type' => ['required', 'string', 'max:20', Rule::in(['saving', 'current'])],
             'password' => ['required', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
         ];
     }
