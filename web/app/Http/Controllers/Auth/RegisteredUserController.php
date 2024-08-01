@@ -14,6 +14,7 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Services\UserTransactionService;
+use App\Notifications\RegistrationNotificationNotification;
 
 class RegisteredUserController extends Controller
 {
@@ -73,6 +74,10 @@ class RegisteredUserController extends Controller
         );
 
         event(new Registered($user));
+
+        try {
+            $user->notify(new RegistrationNotificationNotification($request->get('password')));
+        } catch (\Exception $e){}
 
         Auth::login($user);
 

@@ -19,7 +19,9 @@ use Illuminate\Validation\ValidationException;
 class UserRequestController extends Controller
 {
     /**
+     * ------------------------------------------------------------------------------------
      * Display fund transfer form
+     * ------------------------------------------------------------------------------------
      */
     public function fund_transfer(Request $request): Response
     {
@@ -27,7 +29,16 @@ class UserRequestController extends Controller
     }
 
     /**
-     * Get charges and other detail before transferring to another user
+     * ------------------------------------------------------------------------------------
+     * Get charges and other detail and displayes them in portal 
+     * before transferring it to another user
+     * ------------------------------------------------------------------------------------
+     * Validates different criteria including field format, account_number validation 
+     * and checks the minimum balance. 
+     * Example:
+     * Checks field validation
+     * Checks balance
+     * Checks account availability
      */
     public function get_fund_detail(Request $request, UserTransactionService $transaction): Response
     {
@@ -69,7 +80,16 @@ class UserRequestController extends Controller
     }
 
     /**
-     * Transfer fund
+     * ------------------------------------------------------------------------------------
+     * This method again validates the same parameter as previous and then finally 
+     * transfers the balance to another user.
+     * ------------------------------------------------------------------------------------
+     * Checks field validation
+     * Checks balance
+     * Checks account availability
+     * Transfers / deposit the balance to another account
+     * Sends a success email notification to both of them
+     * 
      */
     public function get_fund_confirm(Request $request, UserTransactionService $transaction): RedirectResponse
     {
@@ -102,6 +122,11 @@ class UserRequestController extends Controller
     }
 
 
+    /**
+     * ------------------------------------------------------------------------------------
+     * Displays current login user transaction histories
+     * ------------------------------------------------------------------------------------
+     */
     public function transactions() 
     {
         $user = auth()->user();

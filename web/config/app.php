@@ -131,4 +131,14 @@ return [
     'user_account_balance' => (float) env('INITIAL_USER_BALANCE', 0),
     'user_currency' => env('USER_DEFAULT_CURRENCY', 'usd'),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Exchange rate api configuration
+    |--------------------------------------------------------------------------
+    */
+    'exchange_rate_api_url' => env('EXCHANGE_RATE_API_URL'),
+    'exchange_rate_api_key' => env('EXCHANGE_RATE_API_KEY'),
+    'exchange_rate_api_symbols' => env('EXCHANGE_RATE_API_SYMBOLS'),
+
 ];

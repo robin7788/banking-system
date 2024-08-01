@@ -8,15 +8,13 @@ use App\Models\UserTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\FundTransferNotification;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 
 class UserTransactionService 
 {
-
-    public function test(): array
-    {
-        return ['dadfas', 'adfasd'];
-    }
 
     /**
      * ----------------------------------------------------------------------------------
@@ -29,7 +27,6 @@ class UserTransactionService
 
     public function deposit(UserAccount $userAccount, number|int|float $amount, User $deposited_by, $note = ""): bool
     {
-        return false;
         DB::beginTransaction();
         try {
             $depositorUserAccount = $deposited_by->account;
@@ -111,8 +108,11 @@ class UserTransactionService
         $charge = $exchange_rate = 0;
 
         if($from_currency != $to_currency) {
+            // $rates = $this->get_rates($from_currency)->{$to_currency};
 
             // TODO:: Integrate currency conversion API to get exchange rate of different currency
+            // TODO:: Free version of exchangerate api doesnot support base parameter so was not able to look further.
+            // Once we get the rate. We just need to replace current  exchange_rate value with given rate.
             $exchange_rate = 0.78;  # USD to GBP
 
             $charge = 0.01;
@@ -121,5 +121,26 @@ class UserTransactionService
 
         return ['amount' => $amount, 'charge' => $charge, 'rate' => $exchange_rate];
     }
+
+
+    public function get_rates($base = 'eur') 
+    {
+        
+        $endpoint = config('app.exchange_rate_api_url') . config('app.exchange_rate_api_key');
+        $symbols = config('app.exchange_rate_api_symbols');
+
+        $symbols = "&format=1&symbols=" . $symbols;
+        
+        
+        $endpoint .= $symbols;
+        
+        $response = Http::get($endpoint);
+
+        $data = $response->object();
+
+        return $data->rates;
+    }
+
+
 
 }
