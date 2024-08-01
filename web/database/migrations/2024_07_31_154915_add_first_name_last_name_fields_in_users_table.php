@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->renameColumn('name', 'first_name');
-            $table->bigInteger('account_number')->unique()->nullable()->after('id');
             $table->string('last_name')->nullable()->after('first_name');
             $table->date('dob')->nullable()->after('last_name');
             $table->string('address_1')->nullable()->after('dob');
@@ -33,7 +32,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
-                'account_number', 'last_name', 'dob', 'address_1', 'address_2', 'town', 
+                'last_name', 'dob', 'address_1', 'address_2', 'town', 
                 'country', 'post_code', 'two_factor_code', 'two_factor_expires_at'
             ]);
             $table->renameColumn('first_name', 'name');

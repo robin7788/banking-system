@@ -10,10 +10,13 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Carbon;
 use App\Models\User;
+use App\Models\UserAccount;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Services\UserTransactionService;
+use App\Http\Resources\UserTransactionsResource;
 
 class UserController extends Controller
 {
@@ -22,6 +25,8 @@ class UserController extends Controller
      */
     public function index(Request $request): Response
     {
+        // User::factory()->count(30)->create();
+
         $columns = [
             'id', 'first_name', 'last_name', 'email', 'dob',
             'address_1', 'address_2', 'town', 'country', 'post_code',
@@ -60,7 +65,7 @@ class UserController extends Controller
     /**
      * Store the user information.
      */
-    public function store(UserCreateRequest $request): RedirectResponse
+    public function store(UserCreateRequest $request, UserTransactionService $transaction): RedirectResponse
     {
         $user = User::create([
             'first_name' => $request->first_name,
@@ -75,9 +80,23 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
-            'account_number' => getRandomAccountNumber()
+            'password' => Hash::make($request->get('password'))
         ]);
+
+        $userAccount = UserAccount::create([
+            'user_id' => $user->id,
+            'account_number' => getRandomAccountNumber(),
+            'balance' => 0,
+            'currency' => config('app.user_currency')
+        ]);
+
+        $transaction->deposit(
+            $userAccount, 
+            config('app.user_account_balance'), 
+            auth()->user(), 
+        );
+
+
         
         return Redirect::route('admin.user.edit', $user->id);
     }
@@ -96,7 +115,7 @@ class UserController extends Controller
     /**
      * Update the user information
      */
-    public function update(UserUpdateRequest $request, User $user): RedirectResponse
+    public function update(UserUpdateRequest $request, UserTransactionService $transaction, User $user): RedirectResponse
     {
         $user->first_name = $request->get('first_name');
         $user->last_name = $request->get('last_name');
@@ -109,8 +128,20 @@ class UserController extends Controller
         $user->email = $request->get('email');
         $user->updated_at = Carbon::now();
 
-        if(!$user->account_number)
-            $user->account_number = getRandomAccountNumber();
+        if(!$user->account){
+            $userAccount = UserAccount::create([
+                'user_id' => $user->id,
+                'account_number' => getRandomAccountNumber(),
+                'balance' => 0,
+                'currency' => config('app.user_currency')
+            ]);
+            $success = $transaction->deposit(
+                $userAccount, 
+                config('app.user_account_balance'), 
+                auth()->user(), 
+            );
+
+        }
 
         if($request->get('password'))
             $user->password = Hash::make($request->get('password'));
@@ -118,5 +149,14 @@ class UserController extends Controller
         $user->save();
 
         return Redirect::route('admin.user.edit', $user->id);
+    }
+
+    public function transaction(User $user) : Response
+    {
+        $transactions = $user->account?->transactions()->orderBy('id', 'desc')->get();
+        return Inertia::render('SharedFile/Transactions', [
+            'user' => $user,
+            'transactions' => !empty($transactions) ? UserTransactionsResource::collection($transactions) : []
+        ]);
     }
 }

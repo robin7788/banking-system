@@ -1,10 +1,21 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+
+const props = defineProps({
+    status: {
+        type: String,
+    },
+});
+
 </script>
 
 <template>
     <Head title="Dashboard" />
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
 
     <AuthenticatedLayout>
         <template #header>

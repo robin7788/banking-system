@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserAccount;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\UserTransactionService;
 
 class RegisteredUserController extends Controller
 {
@@ -28,7 +30,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserTransactionService $transaction): RedirectResponse
     {
         $request->validate([
             'first_name' => 'required|string|max:100',
@@ -54,9 +56,21 @@ class RegisteredUserController extends Controller
             'post_code' => $request->post_code,
             'country' => $request->country,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'account_number' => getRandomAccountNumber()
+            'password' => Hash::make($request->password)
         ]);
+
+        $userAccount = UserAccount::create([
+            'user_id' => $user->id,
+            'account_number' => getRandomAccountNumber(),
+            'balance' => 0,
+            'currency' => config('app.user_currency')
+        ]);
+        
+        $transaction->deposit(
+            $userAccount, 
+            config('app.user_account_balance'), 
+            User::find(1), 
+        );
 
         event(new Registered($user));
 

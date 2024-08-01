@@ -1,5 +1,5 @@
 <?php 
-use App\Models\User;
+use App\Models\UserAccount;
 
 if (! function_exists('getRandomAccountNumber')) {
     function getRandomAccountNumber(): int
@@ -8,7 +8,7 @@ if (! function_exists('getRandomAccountNumber')) {
             $randomNumber = (string) rand(1000000, 9999999);
             $year = now()->format('Y');
             $account_number = (int) ($year . $randomNumber);
-        } while (User::where('account_number', $account_number)->count() > 1);
+        } while (UserAccount::where('account_number', $account_number)->limit(1)->count() > 0);
         return $account_number;
     }
 }

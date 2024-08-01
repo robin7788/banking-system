@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\UserAccount;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -17,7 +19,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'account_number',
         'first_name',
         'last_name',
         'dob',
@@ -49,7 +50,7 @@ class User extends Authenticatable
      * @var array<string, string, int>
      */
     protected $appends = [
-        'name', 'full_address', 'is_admin'
+        'name', 'full_address', 'is_admin', 'account'
     ];
 
     /**
@@ -111,4 +112,16 @@ class User extends Authenticatable
         $this->two_factor_expires_at = null;
         $this->save();
     }
+
+
+    public function getAccountAttribute()
+    {
+        return $this->account()->first();
+    }
+
+    public function account(): HasOne
+    {
+        return $this->hasOne(UserAccount::class);
+    }
+
 }

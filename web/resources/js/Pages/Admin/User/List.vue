@@ -56,13 +56,17 @@ const props = defineProps({
                             <td>{{ user.id }}</td>
                             <td>{{ user.first_name }} {{ user.last_name }}</td>
                             <td>{{ user.dob }}</td>
-                            <td class="w-1/4">{{ user.address }}</td>
+                            <td>{{ user.post_code }}</td>
                             <td>{{ user.created_at }}</td>
                             <td>
                                 <Link
                                     :href="route('admin.user.edit', user.id)"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none"
                                 >Edit</Link>
+                                <Link
+                                    :href="route('admin.user.transaction', user.id)"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 focus:outline-none ml-2"
+                                >Transactions</Link>
                             </td>
                         </tr>
                         </tbody>
