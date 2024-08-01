@@ -1,14 +1,25 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+
+const props = defineProps({
+    status: {
+        type: String,
+    },
+});
+
 </script>
 
 <template>
     <Head title="Dashboard" />
 
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
+
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard (Acc No. : {{ $page.props.auth.user?.account?.account_number }})</h2>
         </template>
 
         <div class="py-12">

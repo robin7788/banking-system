@@ -5,9 +5,15 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+
+const authUser = usePage().props.auth.user;
+
+const is_admin = authUser ? authUser.is_admin : false;
+const userAccount = authUser ? authUser.account : null;
+
 </script>
 
 <template>
@@ -32,10 +38,21 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
+                                <NavLink v-if="is_admin" :href="route('admin.user.index')" :active="route().current('admin.user.*')">
+                                    User
+                                </NavLink>
+                                <NavLink v-if="!is_admin" :href="route('user.transactions')" :active="route().current('user.transactions')">
+                                    Transactions
+                                </NavLink>
+                                <NavLink v-if="!is_admin" :href="route('user.fund.transfer')" :active="route().current('user.fund.*')">
+                                    Fund Transfer
+                                </NavLink>
                             </div>
                         </div>
+                        
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">
+                            <span v-if="!is_admin && userAccount">{{ userAccount.currency.toUpperCase() }} {{ userAccount.balance }} </span>
                             <!-- Settings Dropdown -->
                             <div class="ms-3 relative">
                                 <Dropdown align="right" width="48">

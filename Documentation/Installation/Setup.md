@@ -1,4 +1,14 @@
-# Project Installation Steps
+# Banking system
+
+## Project Info
+1. Laravel: v11
+2. PHP: v8.2
+3. Inertia
+4. Vue: v3.4
+5. Tailwind css: v3
+6. MySQL
+
+## Installation Steps
 
 **Project Requirements**
 1. Lando + Docker (Install this if you want to remove manual docker setup).
@@ -47,3 +57,9 @@
 8. To turn off the service. Run: `lando poweroff`. 
 
 ***Note: If you are using docker directly or following manual process, then you will have different process. Along with that, the DB and other services setting in configuration file will be different.**
+
+
+## Helper documents
+- [System Architecture](Documentation/Installation/System Architecture.jpg)
+- [Login Flowchart](Documentation/Installation/Login Flow Chart.jpg)
+- [DB Schema](Documentation/Installation/DB Schema.png)
